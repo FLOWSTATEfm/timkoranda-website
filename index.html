@@ -1984,6 +1984,7 @@
   <!-- ── Synth Divider ── -->
   <div class="synth-divider" style="margin: 0 -2.5rem; width: calc(100% + 5rem);">
     <img src="images/gallery/m34_processed.jpg" alt="" />
+    <canvas id="synthNoise" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3;opacity:0.045;mix-blend-mode:overlay;"></canvas>
   </div>
 
   <!-- ── Tour ── -->
@@ -2494,6 +2495,39 @@
         else { cancelAnimationFrame(raf); raf = null; }
       }, { threshold: 0.01 }).observe(hero);
 
+      window.addEventListener('resize', resize, { passive: true });
+      requestAnimationFrame(() => { resize(); requestAnimationFrame(tick); });
+    })();
+
+    // ── Synth divider noise ──
+    (function () {
+      const canvas = document.getElementById('synthNoise');
+      const ctx    = canvas.getContext('2d');
+      const osc    = document.createElement('canvas');
+      osc.width = 192; osc.height = 192;
+      const octx = osc.getContext('2d');
+      let raf, lastTs = 0;
+      function resize() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; }
+      function tick(ts) {
+        if (ts - lastTs > 80) {
+          lastTs = ts;
+          const id = octx.createImageData(192, 192);
+          const d  = id.data;
+          for (let i = 0; i < d.length; i += 4) {
+            const v = Math.random() * 255 | 0;
+            d[i] = d[i+1] = d[i+2] = v; d[i+3] = 255;
+          }
+          octx.putImageData(id, 0, 0);
+          ctx.imageSmoothingEnabled = false;
+          ctx.drawImage(osc, 0, 0, canvas.width, canvas.height);
+        }
+        raf = requestAnimationFrame(tick);
+      }
+      const divider = canvas.parentElement;
+      new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) { if (!raf) raf = requestAnimationFrame(tick); }
+        else { cancelAnimationFrame(raf); raf = null; }
+      }, { threshold: 0.01 }).observe(divider);
       window.addEventListener('resize', resize, { passive: true });
       requestAnimationFrame(() => { resize(); requestAnimationFrame(tick); });
     })();
