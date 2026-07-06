@@ -1,0 +1,2085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tim Koranda — DJ & Producer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600;700;800&family=Space+Mono:wght@400;700&family=Inter:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+
+    /* ─── Variables ─── */
+    :root {
+      --bg:     #000;
+      --bg1:    #090909;
+      --bg2:    #111;
+      --line:   rgba(255,255,255,0.07);
+      --line2:  rgba(255,255,255,0.15);
+      --text:   #f0f0f0;
+      --muted:  rgba(240,240,240,0.4);
+      --accent: #00d4ff;
+      --acid:   #d4ff00;
+      --nav-h:  64px;
+    }
+
+    /* ─── Reset ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* Scanlines */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.04) 3px, rgba(0,0,0,0.04) 4px);
+      pointer-events: none;
+      z-index: 9000;
+    }
+
+    /* ─── Helpers ─── */
+    .mono { font-family: 'Space Mono', monospace; }
+    .cond { font-family: 'Barlow Condensed', sans-serif; }
+
+    .tag {
+      display: inline-block;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid rgba(0,212,255,0.35);
+      padding: 0.18rem 0.5rem;
+    }
+
+    /* ─── Nav ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 800;
+      height: var(--nav-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2.5rem;
+      background: rgba(0,0,0,0.82);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--line2);
+    }
+
+    .nav-left { display: flex; align-items: center; gap: 1.5rem; }
+
+    .nav-logo {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      font-size: 1.25rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+    .nav-logo em { font-style: normal; color: var(--accent); }
+
+    .nav-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid var(--line2);
+      padding: 0.2rem 0.5rem;
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      transition: color 0.25s, border-color 0.25s, box-shadow 0.25s;
+    }
+    .nav-label::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      width: 55%;
+      height: 100%;
+      pointer-events: none;
+      background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(0,212,255,0.08) 35%,
+        rgba(0,212,255,0.2) 50%,
+        rgba(0,212,255,0.08) 65%,
+        transparent 100%);
+      transform: translateX(-160%) skewX(-18deg);
+    }
+    .nav-label::after {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      opacity: 0;
+      transition: opacity 0.25s;
+      pointer-events: none;
+      z-index: -1;
+      box-shadow: 0 0 12px 2px rgba(0,212,255,0.28);
+    }
+    .nav-label:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+      box-shadow: 0 0 10px rgba(0,212,255,0.25), inset 0 0 8px rgba(0,212,255,0.04);
+    }
+    .nav-label:hover::before {
+      animation: btn-sweep 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    .nav-label:hover::after {
+      opacity: 1;
+      animation: btn-glow-pulse 1.8s ease-in-out infinite;
+    }
+
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: color 0.15s;
+    }
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--accent); }
+
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+    }
+    .nav-toggle span {
+      display: block;
+      width: 22px; height: 1px;
+      background: var(--text);
+      transition: 0.3s;
+    }
+
+    /* ─── Hero ─── */
+    #home {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: transparent;
+      z-index: 0;
+    }
+    .hero-photo {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+      width: auto;
+      mix-blend-mode: screen;
+      opacity: 0.82;
+      filter: brightness(0.92) contrast(0.86);
+    }
+
+
+    /* ── Grid animations ── */
+    @keyframes gridDrift {
+      0%   { transform: translate(0, 0); }
+      50%  { transform: translate(-36px, -24px); }
+      100% { transform: translate(0, 0); }
+    }
+
+    @keyframes gridFade {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.5; }
+    }
+
+    @keyframes orbBreath1 {
+      0%, 100% { transform: scale(1);   opacity: 1; }
+      50%       { transform: scale(1.2); opacity: 0.6; }
+    }
+
+    @keyframes orbBreath2 {
+      0%, 100% { transform: scale(1);   opacity: 1; }
+      50%       { transform: scale(0.85); opacity: 0.5; }
+    }
+
+    /* Horizontal scanline that sweeps top → bottom */
+    @keyframes scanSweep {
+      0%        { top: 0%;   opacity: 0; }
+      3%        { opacity: 1; }
+      97%       { opacity: 1; }
+      100%      { top: 100%; opacity: 0; }
+    }
+
+    /* Radial pulse wave that expands from centre */
+    @keyframes pulsRing {
+      0%   { transform: translate(-50%, -50%) scale(0.1); opacity: 0.5; }
+      100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
+    }
+
+    /* Grid layer */
+    .hero-grid {
+      position: absolute; inset: -72px; z-index: 1; /* oversized so drift doesn't show edges */
+      background-image:
+        linear-gradient(var(--line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--line) 1px, transparent 1px);
+      background-size: 72px 72px;
+      mask-image: radial-gradient(ellipse 90% 90% at 50% 50%, black 20%, transparent 80%);
+      animation: gridDrift 24s ease-in-out infinite, gridFade 24s ease-in-out infinite;
+    }
+
+    /* Scanline */
+    .hero-scan {
+      position: absolute;
+      left: 0; right: 0;
+      height: 1px;
+      z-index: 3;
+      background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(0,212,255,0.06) 15%,
+        rgba(0,212,255,0.22) 50%,
+        rgba(0,212,255,0.06) 85%,
+        transparent 100%
+      );
+      pointer-events: none;
+      z-index: 2;
+      animation: scanSweep 9s linear infinite;
+    }
+    .hero-scan::after {
+      content: '';
+      position: absolute;
+      inset: -8px 0;
+      background: inherit;
+      filter: blur(6px);
+      opacity: 0.5;
+    }
+
+    /* Pulse rings */
+    .hero-pulse {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      border: 1px solid rgba(0,212,255,0.12);
+      pointer-events: none;
+      z-index: 1;
+      animation: pulsRing 7s ease-out infinite;
+    }
+    .hero-pulse:nth-child(2) { animation-delay: 2.33s; }
+    .hero-pulse:nth-child(3) { animation-delay: 4.66s; }
+
+    /* Film-grain noise canvas */
+    #noiseCanvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.045;
+      mix-blend-mode: screen;
+    }
+
+    /* Oscilloscope canvas */
+    #oscCanvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 3;
+      opacity: 0.75;
+    }
+
+    /* Glow orbs */
+    .hero-orb {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .hero-orb-1 {
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(0,212,255,0.07) 0%, transparent 65%);
+      top: -100px; right: -100px;
+      animation: orbBreath1 11s ease-in-out infinite;
+    }
+    .hero-orb-2 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(212,255,0,0.05) 0%, transparent 65%);
+      bottom: 0; left: -100px;
+      animation: orbBreath2 14s ease-in-out infinite 2s;
+    }
+
+    /* ── Analog scope vignette ── */
+    .hero-vignette {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      /* Atmospheric edge fade — screen-blend does the heavy lifting, this just softens the perimeter */
+      background:
+        radial-gradient(ellipse 75% 80% at 50% 48%,
+          transparent 30%,
+          rgba(0,0,0,0.35) 60%,
+          rgba(0,0,0,0.85) 85%,
+          rgba(0,0,0,1.00) 100%);
+    }
+    /* Faint phosphor screen-edge rectangle — the "glass" of the tube */
+    .hero-vignette::after {
+      content: '';
+      position: absolute;
+      inset: 3% 3%;
+      border: 1px solid rgba(0, 212, 255, 0.025);
+      border-radius: 3px;
+      box-shadow: 0 0 60px rgba(0, 0, 0, 0.6);
+    }
+
+    .hero-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: calc(var(--nav-h) + 4rem) 2.5rem 4rem;
+      position: relative;
+      z-index: 4;
+    }
+
+    .hero-eyebrow {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 32px; height: 1px;
+      background: var(--accent);
+    }
+
+    h1.hero-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      font-size: clamp(5rem, 17vw, 15rem);
+      line-height: 0.85;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      margin-bottom: 2.5rem;
+    }
+    h1.hero-name .accent { color: var(--accent); }
+
+    .hero-footer {
+      display: flex;
+      align-items: center;
+      gap: 3rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-desc {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text);
+      line-height: 2;
+      max-width: 300px;
+      text-shadow: 0 1px 12px rgba(0,0,0,0.9), 0 0 30px rgba(0,0,0,0.7);
+    }
+
+    .hero-sep { width: 1px; height: 50px; background: var(--line2); }
+
+
+    .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    @keyframes btn-sweep {
+      0%   { transform: translateX(-160%) skewX(-18deg); }
+      100% { transform: translateX(260%) skewX(-18deg); }
+    }
+    @keyframes btn-glow-pulse {
+      0%, 100% { opacity: 0.55; }
+      50%       { opacity: 1; }
+    }
+
+    .btn {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      padding: 0.85rem 2rem;
+      cursor: pointer;
+      transition: all 0.25s;
+      border: none;
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+    }
+    /* sweep streak */
+    .btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      width: 55%;
+      height: 100%;
+      pointer-events: none;
+      transform: translateX(-160%) skewX(-18deg);
+      transition: none;
+    }
+    .btn:hover::before {
+      animation: btn-sweep 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    /* back-glow layer — sits behind content via z-index */
+    .btn::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: inherit;
+      opacity: 0;
+      transition: opacity 0.25s;
+      pointer-events: none;
+      z-index: -1;
+    }
+    .btn:hover::after {
+      opacity: 1;
+      animation: btn-glow-pulse 1.8s ease-in-out infinite;
+    }
+
+    /* ── Primary (solid teal) ── */
+    .btn-primary { background: var(--accent); color: #000; }
+    .btn-primary:hover { background: var(--accent); box-shadow: 0 0 18px rgba(0,212,255,0.55), 0 0 36px rgba(0,212,255,0.2); }
+    .btn-primary::before {
+      background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(255,255,255,0.12) 35%,
+        rgba(255,255,255,0.38) 50%,
+        rgba(255,255,255,0.12) 65%,
+        transparent 100%);
+    }
+    .btn-primary::after {
+      box-shadow: 0 0 22px 4px rgba(0,212,255,0.45);
+    }
+
+    /* ── Outline ── */
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--line2);
+    }
+    .btn-outline:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(0,212,255,0.04);
+      box-shadow: 0 0 14px rgba(0,212,255,0.3), inset 0 0 12px rgba(0,212,255,0.05);
+    }
+    .btn-outline::before {
+      background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(0,212,255,0.08) 35%,
+        rgba(0,212,255,0.22) 50%,
+        rgba(0,212,255,0.08) 65%,
+        transparent 100%);
+    }
+    .btn-outline::after {
+      box-shadow: 0 0 18px 3px rgba(0,212,255,0.3);
+    }
+
+    /* Ticker */
+    .hero-ticker {
+      position: relative; z-index: 2;
+      border-top: 1px solid var(--line2);
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px);
+      height: 42px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+    }
+    .ticker-track {
+      display: flex;
+      animation: ticker 35s linear infinite;
+      white-space: nowrap;
+    }
+    .ticker-item {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0 2.5rem;
+    }
+    .ticker-item .dot { color: var(--accent); margin-right: 0.75rem; }
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ─── Sections ─── */
+    section { padding: 7rem 2.5rem; border-top: 1px solid var(--line); }
+
+    .sec-head {
+      display: flex;
+      align-items: baseline;
+      gap: 1.5rem;
+      margin-bottom: 4rem;
+    }
+    .sec-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+    }
+    .sec-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      line-height: 1;
+      color: var(--text);
+    }
+    .sec-rule { flex: 1; height: 1px; background: var(--line2); }
+
+    /* ─── About ─── */
+    #about { background: var(--bg1); }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 5rem;
+      max-width: 1100px;
+      align-items: start;
+    }
+
+    .about-img-wrap { position: relative; }
+    .about-img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      display: block;
+      filter: grayscale(15%) contrast(1.05);
+    }
+    .about-img-bar {
+      background: rgba(0,0,0,0.75);
+      padding: 0.55rem 0.85rem;
+      display: flex;
+      justify-content: space-between;
+    }
+    .about-img-bar span {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .about-tags { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 1.75rem; }
+
+    .about-bio {
+      font-size: 1.05rem;
+      line-height: 1.9;
+      color: rgba(240,240,240,0.7);
+      margin-bottom: 1.25rem;
+      max-width: 560px;
+    }
+
+    .about-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--line2);
+      border: 1px solid var(--line2);
+      margin: 2rem 0;
+    }
+    .stat { background: var(--bg); padding: 1.1rem 1.25rem; }
+    .stat-n {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 2rem;
+      color: var(--accent);
+      line-height: 1;
+    }
+    .stat-l {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 0.35rem;
+    }
+
+    .social-row { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+    .social-link {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      transition: color 0.15s;
+      padding-bottom: 1px;
+      border-bottom: 1px solid transparent;
+    }
+    .social-link:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+    /* ─── Tour ─── */
+    #tour { background: var(--bg); }
+
+    .tour-list { max-width: 1100px; }
+
+    .tour-item {
+      display: grid;
+      grid-template-columns: 140px 1fr 200px auto;
+      align-items: center;
+      gap: 2rem;
+      padding: 1.5rem 0;
+      border-bottom: 1px solid var(--line);
+      transition: background 0.15s;
+    }
+    .tour-item:first-child { border-top: 1px solid var(--line); }
+    .tour-item:hover { background: var(--bg2); margin: 0 -2.5rem; padding-left: 2.5rem; padding-right: 2.5rem; }
+
+    .tour-date {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 1.4rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .tour-date-sub {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      margin-top: 0.15rem;
+    }
+
+    .tour-venue {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 600;
+      font-size: 1.2rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text);
+    }
+    .tour-city {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+
+    .tour-status {
+      text-align: right;
+    }
+    .tour-badge {
+      display: inline-block;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.6rem;
+    }
+    .badge-on-sale { color: var(--acid); border: 1px solid rgba(212,255,0,0.35); }
+    .badge-sold-out { color: var(--muted); border: 1px solid var(--line2); }
+
+    .tour-ticket {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid rgba(0,212,255,0.35);
+      padding: 0.55rem 1.1rem;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .tour-ticket:hover { background: var(--accent); color: #000; }
+    .tour-ticket-na { color: var(--muted); border-color: var(--line); pointer-events: none; }
+
+    .tour-empty {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      padding: 3rem 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .tour-note {
+      margin-top: 2rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      line-height: 1.8;
+      border-left: 2px solid var(--accent);
+      padding-left: 1rem;
+      max-width: 600px;
+    }
+
+    /* ─── Discography ─── */
+    #discography { background: var(--bg1); }
+
+    .disco-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 2px;
+      max-width: 1100px;
+      background: var(--line);
+    }
+
+    .disco-card {
+      background: var(--bg);
+      transition: background 0.2s;
+      position: relative;
+    }
+    .disco-card:hover { background: var(--bg2); }
+
+    .disco-art {
+      aspect-ratio: 1;
+      background: var(--bg2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+    .disco-art img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: grayscale(20%) brightness(0.85);
+      transition: filter 0.35s, transform 0.4s;
+    }
+    .disco-card:hover .disco-art img {
+      filter: grayscale(0%) brightness(0.7);
+      transform: scale(1.03);
+    }
+    .disco-art-ph {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 0.5rem;
+      color: var(--line2);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 3.5rem;
+      font-weight: 300;
+      letter-spacing: -0.02em;
+    }
+
+    .disco-art-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 60%);
+      opacity: 0; transition: opacity 0.3s;
+      display: flex; align-items: flex-end;
+      padding: 1rem;
+      gap: 0.5rem;
+    }
+    .disco-card:hover .disco-art-overlay { opacity: 1; }
+
+    .disco-stream-btn {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.52rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 0.35rem 0.7rem;
+      border: 1px solid rgba(0,212,255,0.6);
+      color: var(--accent);
+      transition: all 0.15s;
+    }
+    .disco-stream-btn:hover { background: var(--accent); color: #000; }
+
+    .disco-body {
+      padding: 1rem 1.1rem;
+      border-top: 1px solid var(--line);
+    }
+
+    .disco-type {
+      display: inline-block;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.5rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid rgba(0,212,255,0.25);
+      padding: 0.1rem 0.4rem;
+      margin-bottom: 0.5rem;
+    }
+    .disco-type.remix { color: var(--acid); border-color: rgba(212,255,0,0.25); }
+    .disco-type.live  { color: #ff6b6b; border-color: rgba(255,107,107,0.25); }
+
+    .disco-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text);
+      line-height: 1.2;
+      margin-bottom: 0.2rem;
+    }
+    .disco-artist {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.52rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 0.6rem;
+      line-height: 1.6;
+    }
+    .disco-year {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.5rem;
+      letter-spacing: 0.15em;
+      color: rgba(255,255,255,0.2);
+    }
+
+    /* ─── Tracks ─── */
+    #tracks { background: var(--bg1); }
+
+    .player-wrap {
+      max-width: 1100px;
+      border: 1px solid var(--line2);
+      overflow: hidden;
+    }
+    .player-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.65rem 1.1rem;
+      background: var(--bg2);
+      border-bottom: 1px solid var(--line2);
+    }
+    .player-bar span {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .player-bar a {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: color 0.15s;
+    }
+    .player-bar a:hover { color: var(--accent); }
+    .player-wrap iframe { display: block; }
+
+    /* ─── Gallery ─── */
+    #gallery { background: var(--bg); }
+
+    /* ── Abstract duotone montage ── */
+    #gallery { overflow: hidden; } /* clips scaled cells at section edge */
+    .gallery-montage {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      grid-auto-rows: 155px;
+      grid-auto-flow: dense;
+      gap: 2px;
+      background: #000;
+      position: relative;
+      overflow: visible; /* cells can scale out of their slot */
+      width: 100%;
+    }
+    /* Big featured cells — 3×2 */
+    .gm-cell:nth-child(1)  { grid-column: span 3; grid-row: span 2; }
+    .gm-cell:nth-child(15) { grid-column: span 3; grid-row: span 2; }
+    .gm-cell:nth-child(26) { grid-column: span 3; grid-row: span 2; }
+    /* Wide landscape cells — 2×1 */
+    .gm-cell:nth-child(4)  { grid-column: span 2; }
+    .gm-cell:nth-child(9) { grid-column: span 2; }
+    .gm-cell:nth-child(18) { grid-column: span 2; }
+    .gm-cell:nth-child(23) { grid-column: span 2; }
+    .gm-cell:nth-child(30) { grid-column: span 2; }
+    /* Tall portrait cells — 1×2 */
+    .gm-cell:nth-child(6)  { grid-row: span 2; }
+    .gm-cell:nth-child(12) { grid-row: span 2; }
+    .gm-cell:nth-child(21) { grid-row: span 2; }
+    .gm-cell:nth-child(29) { grid-row: span 2; }
+
+    .gm-cell {
+      overflow: hidden;
+      background: #050505;
+      position: relative;
+      min-height: 0;
+    }
+    .gm-cell img {
+      width: 100%; height: 100%;
+      display: block;
+      object-fit: cover;
+      filter: grayscale(100%) sepia(70%) hue-rotate(155deg) saturate(1.8) brightness(0.72) contrast(1.1);
+      transition: filter 0.12s ease-out;
+      will-change: filter;
+      /* Vignette feathering — radial fade, no hard corners */
+      -webkit-mask-image: radial-gradient(ellipse 90% 90% at 50% 50%, black 62%, transparent 100%);
+      mask-image:         radial-gradient(ellipse 90% 90% at 50% 50%, black 62%, transparent 100%);
+    }
+    .gm-cell {
+      transition: transform 0.12s ease-out, box-shadow 0.15s ease-out;
+      will-change: transform;
+    }
+    /* Whole-montage edge fade */
+    .gallery-montage::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 100% 100% at 50% 50%, transparent 50%, rgba(0,0,0,0.4) 100%);
+      pointer-events: none;
+      z-index: 100;
+    }
+
+
+    /* ─── Merch ─── */
+    #merch { background: var(--bg1); }
+
+    .shop-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 2px;
+      max-width: 1100px;
+      background: var(--line);
+    }
+    .shop-card {
+      background: var(--bg);
+      transition: background 0.2s;
+    }
+    .shop-card:hover { background: var(--bg2); }
+
+    .shop-thumb {
+      aspect-ratio: 1;
+      background: var(--bg2);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .shop-thumb img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(30%); transition: filter 0.3s; }
+    .shop-card:hover .shop-thumb img { filter: grayscale(0%); }
+    .shop-thumb-ph { font-size: 2rem; color: var(--line2); }
+
+    .shop-body { padding: 1.1rem; border-top: 1px solid var(--line); }
+    .shop-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 600;
+      font-size: 1.05rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text);
+    }
+    .shop-sub {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 0.25rem 0 0.85rem;
+    }
+    .shop-row { display: flex; align-items: center; justify-content: space-between; }
+    .shop-price {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: var(--accent);
+      letter-spacing: 0.04em;
+    }
+    .shop-btn {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 0.45rem 0.9rem;
+      background: transparent;
+      border: 1px solid var(--line2);
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .shop-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    .shop-note {
+      max-width: 1100px;
+      margin-top: 2px;
+      padding: 0.9rem 1.1rem;
+      background: var(--bg2);
+      border-left: 2px solid var(--accent);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      line-height: 1.9;
+    }
+    .shop-note a { color: var(--accent); }
+    .shop-note a:hover { color: var(--acid); }
+
+    /* ─── Contact ─── */
+    #contact { background: var(--bg); }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 5rem;
+      max-width: 1100px;
+      align-items: start;
+    }
+
+    .c-block { margin-bottom: 2.5rem; }
+    .c-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+    .c-val {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem;
+      letter-spacing: 0.05em;
+      color: var(--text);
+      transition: color 0.15s;
+    }
+    .c-val:hover { color: var(--accent); }
+
+    .form-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; }
+    .fg { margin-bottom: 1px; }
+    .flabel {
+      display: block;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0.7rem 1rem 0.3rem;
+      background: var(--bg2);
+    }
+    .fctrl {
+      display: block;
+      width: 100%;
+      padding: 0.55rem 1rem 0.8rem;
+      background: var(--bg2);
+      border: none;
+      border-bottom: 1px solid var(--line);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 300;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .fctrl:focus { background: #111; border-bottom-color: var(--accent); }
+    .fctrl::placeholder { color: rgba(255,255,255,0.18); }
+    textarea.fctrl { resize: none; min-height: 110px; }
+
+    .fsub {
+      margin-top: 1px;
+      width: 100%;
+      padding: 1rem;
+      background: var(--accent);
+      color: #000;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .fsub:hover { background: var(--acid); }
+    #fstatus {
+      display: none;
+      margin-top: 0.85rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+    }
+
+    /* ─── Footer ─── */
+    footer {
+      border-top: 1px solid var(--line2);
+      padding: 2rem 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      background: var(--bg);
+    }
+    .footer-logo {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .footer-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.52rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .footer-label a:hover { color: var(--accent); }
+    .footer-links { display: flex; gap: 2rem; list-style: none; }
+    .footer-links a {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: color 0.15s;
+    }
+    .footer-links a:hover { color: var(--accent); }
+    .footer-copy {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.52rem;
+      color: rgba(255,255,255,0.18);
+      letter-spacing: 0.06em;
+    }
+
+    /* ─── Lightbox ─── */
+    .lightbox {
+      display: none; position: fixed; inset: 0;
+      z-index: 900; background: rgba(0,0,0,0.95);
+      align-items: center; justify-content: center;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox img { max-width: 90vw; max-height: 88vh; object-fit: contain; }
+    .lb-close {
+      position: absolute; top: 1.5rem; right: 2rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+      cursor: pointer;
+      transition: color 0.15s;
+    }
+    .lb-close:hover { color: var(--accent); }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 900px) {
+      nav { padding: 0 1.25rem; }
+      .nav-links, .nav-label { display: none; }
+      .nav-toggle { display: flex; }
+      .nav-links.open {
+        display: flex; flex-direction: column;
+        position: fixed; top: var(--nav-h); left: 0; right: 0; bottom: 0;
+        background: var(--bg); padding: 2.5rem 1.25rem;
+        gap: 2rem; border-top: 1px solid var(--line2);
+        z-index: 799;
+      }
+      .nav-links.open a { font-size: 0.8rem; }
+
+      section { padding: 5rem 1.25rem; }
+      .hero-content { padding: 3rem 1.25rem 2rem; }
+
+      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .about-img-wrap { max-width: 260px; }
+      .about-stats { grid-template-columns: repeat(3, 1fr); }
+
+      .tour-item { grid-template-columns: 110px 1fr; gap: 1rem; }
+      .tour-status, .tour-ticket { display: none; }
+
+      .gallery-grid { grid-template-columns: 1fr 1fr; }
+      .gi:nth-child(n) { grid-column: span 1; grid-row: span 1; }
+      .gi:nth-child(1) { grid-column: span 2; }
+
+      .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .form-pair { grid-template-columns: 1fr; }
+
+      footer { flex-direction: column; align-items: flex-start; }
+    }
+
+    @media (max-width: 480px) {
+      h1.hero-name { font-size: clamp(4.5rem, 20vw, 7rem); }
+      .about-stats { grid-template-columns: 1fr 1fr; }
+      .about-stats .stat:last-child { grid-column: span 2; }
+      .shop-grid { grid-template-columns: 1fr; }
+    }
+
+
+    /* ─── Merch coming-soon callout ─── */
+    .merch-soon {
+      margin: 0 2.5rem 2.5rem;
+      padding: 1.4rem 2rem;
+      border: 1px solid rgba(0,212,255,0.35);
+      background: rgba(0,212,255,0.04);
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+    .merch-soon-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.52rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+    .merch-soon-text {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+    .merch-soon-sub {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+      font-family: 'Space Mono', monospace;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Nav ── -->
+  <nav>
+    <div class="nav-left">
+      <a href="#home" class="nav-logo">Tim <em>Koranda</em></a>
+      <a href="https://flowstaterecords.fm" target="_blank" rel="noopener" class="nav-label">Flowstate Records</a>
+    </div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">About</a></li>
+      <li><a href="#tour">Tour</a></li>
+      <li><a href="#discography">Music</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#merch">Merch</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="nav-toggle" id="navToggle"><span></span><span></span><span></span></div>
+  </nav>
+
+  <!-- ── Hero ── -->
+  <section id="home">
+    <div class="hero-bg">
+      <img class="hero-photo" src="images/gallery/m33.jpg" alt="" />
+    </div>
+    <canvas id="noiseCanvas"></canvas>
+    <div class="hero-grid"></div>
+    <canvas id="oscCanvas"></canvas>
+    <div class="hero-scan"></div>
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="hero-vignette"></div>
+
+    <!--
+      BACKGROUND PHOTO: To use a photo, add this line inside .hero-bg's inline style or CSS:
+        background: linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.8) 100%),
+                    url('images/hero.jpg') center/cover no-repeat;
+
+      BACKGROUND VIDEO: Add a <video> tag here:
+        <video autoplay muted loop playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.35;z-index:0;">
+          <source src="videos/hero.mp4" type="video/mp4">
+        </video>
+    -->
+
+    <div class="hero-content">
+      <p class="hero-eyebrow">DJ &amp; Producer &nbsp;·&nbsp; Los Angeles &nbsp;·&nbsp; <a href="https://flowstaterecords.fm" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.2);">Flowstate Records</a></p>
+      <h1 class="hero-name">
+        Tim<br><span class="accent">Koranda</span>
+      </h1>
+      <div class="hero-footer">
+        <p class="hero-desc">
+          Deep tech house &amp; techno<br>
+          Built for the dancefloor<br>
+          Underground Roots · Analog Soul
+        </p>
+        <div class="hero-sep"></div>
+        <div class="hero-cta">
+          <a href="#tracks" class="btn btn-primary">Listen Now</a>
+          <a href="#tour" class="btn btn-outline">Tour Dates</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-ticker">
+      <div class="ticker-track">
+        <div class="ticker-item"><span class="dot">▸</span>Deep Tech House</div>
+        <div class="ticker-item"><span class="dot">▸</span>Techno</div>
+        <div class="ticker-item"><span class="dot">▸</span>Los Angeles</div>
+        <div class="ticker-item"><span class="dot">▸</span>Flowstate Records</div>
+        <div class="ticker-item"><span class="dot">▸</span>DJ · Producer</div>
+        <div class="ticker-item"><span class="dot">▸</span>Available for Booking</div>
+        <div class="ticker-item"><span class="dot">▸</span>Hypnotic Groove</div>
+        <div class="ticker-item"><span class="dot">▸</span>Global Club Culture</div>
+        <div class="ticker-item"><span class="dot">▸</span>Deep Tech House</div>
+        <div class="ticker-item"><span class="dot">▸</span>Techno</div>
+        <div class="ticker-item"><span class="dot">▸</span>Los Angeles</div>
+        <div class="ticker-item"><span class="dot">▸</span>Flowstate Records</div>
+        <div class="ticker-item"><span class="dot">▸</span>DJ · Producer</div>
+        <div class="ticker-item"><span class="dot">▸</span>Available for Booking</div>
+        <div class="ticker-item"><span class="dot">▸</span>Hypnotic Groove</div>
+        <div class="ticker-item"><span class="dot">▸</span>Global Club Culture</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── About ── -->
+  <section id="about">
+    <div class="sec-head">
+      <span class="sec-num">01</span>
+      <h2 class="sec-title">About</h2>
+      <div class="sec-rule"></div>
+    </div>
+    <div class="about-grid">
+      <div class="about-img-wrap">
+        <!--
+          Replace with your own press photo later:
+          <img class="about-img" src="images/tim-koranda.jpg" alt="Tim Koranda" />
+          Currently pulling your SoundCloud avatar.
+        -->
+        <img
+          class="about-img"
+          src="https://i1.sndcdn.com/avatars-GUkJ5cEclTTswfyy-AGKYtA-t500x500.jpg"
+          alt="Tim Koranda"
+        />
+        <div class="about-img-bar">
+          <span>Tim Koranda</span>
+          <span>Los Angeles</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="about-tags">
+          <span class="tag">DJ</span>
+          <span class="tag">Producer</span>
+          <span class="tag">Tech House</span>
+          <span class="tag">Techno</span>
+          <span class="tag">Flowstate Records</span>
+        </div>
+
+        <p class="about-bio">
+          Tim Koranda is a Los Angeles–based DJ and producer crafting deep, soulful
+          tech house and techno built for the dancefloor. With years immersed in
+          global club culture, his sound focuses on hypnotic grooves, tension, and release.
+        </p>
+        <p class="about-bio">
+          Since 2011, Tim has built his name across Southern California's most respected rooms — Avalon, Academy LA, Exchange, The Yost Theater, Sutra, and a 15-year residency at Brussels Bistro in Laguna Beach, one of the region's defining underground venues. His reach extends beyond SoCal with appearances at Casa in Phoenix and Techno Taco Tuesdays in Las Vegas alongside MNTRA. Rooted in the underground and built on the dancefloor.
+        </p>
+
+        <div class="about-stats">
+          <div class="stat">
+            <div class="stat-n">7+</div>
+            <div class="stat-l">Releases</div>
+          </div>
+          <div class="stat">
+            <div class="stat-n">15+</div>
+            <div class="stat-l">Years In The Underground</div>
+          </div>
+          <div class="stat">
+            <div class="stat-n">LA</div>
+            <div class="stat-l">Based</div>
+          </div>
+        </div>
+
+        <div class="social-row">
+          <a href="https://soundcloud.com/timkoranda" class="social-link" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M1.175 12.225c-.051 0-.094.046-.101.1l-.233 2.154.233 2.105c.007.058.05.098.101.098.05 0 .09-.04.099-.098l.255-2.105-.27-2.154c-.009-.06-.05-.1-.1-.1m-.899.828c-.06 0-.091.037-.104.094L0 14.479l.172 1.308c.013.06.045.094.104.094.056 0 .091-.037.104-.094l.195-1.308-.195-1.332c-.013-.057-.048-.094-.104-.094M2.37 11.75c-.07 0-.12.05-.13.12l-.205 2.608.205 2.516c.01.07.06.12.13.12.067 0 .12-.05.13-.12l.23-2.516-.23-2.608c-.01-.07-.06-.12-.13-.12m.904-.293c-.078 0-.14.063-.15.14l-.193 2.882.193 2.43c.01.077.072.14.15.14.08 0 .14-.063.15-.14l.22-2.43-.22-2.882c-.01-.077-.07-.14-.15-.14m17.747.712c-.27 0-.522.056-.75.155-.155-3.325-2.84-5.968-6.166-5.968-1.012 0-1.968.262-2.795.72-.308.174-.39.352-.394.508v11.454c.004.163.128.297.29.31h9.815c.77 0 1.393-.625 1.393-1.393V11.36c0-.77-.622-1.39-1.393-1.39"/></svg>
+            SoundCloud
+          </a>
+          <a href="https://www.instagram.com/timkoranda/" class="social-link" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            Instagram
+          </a>
+          <a href="https://www.facebook.com/tim.koranda" class="social-link" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            Facebook
+          </a>
+          <a href="https://x.com/timkoranda" class="social-link" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.259 5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            X / Twitter
+          </a>
+          <a href="https://open.spotify.com" class="social-link" target="_blank" rel="noopener" style="opacity:0.4" title="Coming soon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.424a.622.622 0 01-.857.207c-2.348-1.435-5.304-1.76-8.785-.964a.623.623 0 01-.277-1.215c3.809-.87 7.077-.496 9.712 1.115a.623.623 0 01.207.857zm1.223-2.722a.78.78 0 01-1.072.257c-2.687-1.652-6.785-2.13-9.965-1.166a.78.78 0 01-.973-.519.781.781 0 01.519-.972c3.632-1.102 8.147-.568 11.234 1.328a.78.78 0 01.257 1.072zm.105-2.835C14.692 8.95 9.375 8.775 6.297 9.71a.937.937 0 11-.543-1.79c3.532-1.072 9.404-.865 13.115 1.338a.937.937 0 01-.955 1.609z"/></svg>
+            Spotify <span style="font-size:0.45rem;opacity:0.6">soon</span>
+          </a>
+          <a href="https://music.apple.com" class="social-link" target="_blank" rel="noopener" style="opacity:0.4" title="Coming soon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M23.994 6.124a9.23 9.23 0 00-.24-2.19c-.317-1.31-1.062-2.31-2.18-3.043a5.022 5.022 0 00-1.877-.726 10.496 10.496 0 00-1.564-.15c-.04-.003-.083-.01-.124-.013H5.986c-.152.01-.303.017-.455.026C4.786.07 4.043.15 3.34.428 2.077.958 1.268 1.858.731 3.104A6.1 6.1 0 00.24 4.956C.21 5.309.2 5.664.196 6.018c0 .05-.004.099-.004.15v11.678c0 .05.004.099.004.15.014.367.047.734.12 1.096.315 1.598 1.183 2.717 2.593 3.432.577.29 1.2.44 1.83.505.345.037.692.053 1.04.056l.15.003h11.68l.15-.003c.374-.007.748-.028 1.116-.083 1.52-.22 2.743-1.07 3.454-2.483.338-.669.477-1.39.504-2.127l.003-.15V6.174c.002-.017.002-.033 0-.05zm-8.154 2.053a3.36 3.36 0 01-.278-.03l-5.137 1.308c-.04.01-.08.019-.12.026a.34.34 0 00-.288.33l.015 5.334c0 .208-.012.414-.047.618-.1.574-.427.973-1.003 1.138a2.32 2.32 0 01-.607.084c-.734 0-1.386-.49-1.502-1.22a1.405 1.405 0 011.094-1.659 2.74 2.74 0 01.726-.069c.178.007.353.04.527.086.108.03.216.067.325.095V9.32a.63.63 0 01.487-.616l5.938-1.51a.633.633 0 01.79.614v2.369z"/></svg>
+            Apple Music <span style="font-size:0.45rem;opacity:0.6">soon</span>
+          </a>
+          <a href="https://www.mixcloud.com" class="social-link" target="_blank" rel="noopener" style="opacity:0.4" title="Coming soon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M23.978 12.995a.9.9 0 00-.016-.156l-.003-.02a.847.847 0 00-.02-.1v-.006c-.393-1.804-2.254-2.854-4.013-2.405l-.006.001-.006.002a3.185 3.185 0 00-.423.143.084.084 0 01-.112-.06 5.57 5.57 0 00-10.89 1.17.085.085 0 01-.084.073.086.086 0 01-.023-.003 2.946 2.946 0 00-.707-.087 3.04 3.04 0 00-3.04 3.04 3.04 3.04 0 003.04 3.04h15.063a2.24 2.24 0 002.24-2.24c0-.137-.013-.272-.04-.405l.04-.987zM9.815 9.404a4.402 4.402 0 014.37 3.903.085.085 0 01-.084.093H5.445a.085.085 0 01-.085-.093 4.402 4.402 0 014.455-3.903z"/></svg>
+            Mixcloud <span style="font-size:0.45rem;opacity:0.6">soon</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Tour ── -->
+  <section id="tour">
+    <div class="sec-head">
+      <span class="sec-num">02</span>
+      <h2 class="sec-title">Tour</h2>
+      <div class="sec-rule"></div>
+    </div>
+
+    <div class="tour-list">
+      <!--
+        ADDING SHOW DATES: Copy one .tour-item block and fill in your details.
+        For the ticket link, replace href="#" with your actual ticket URL.
+        Use badge-on-sale or badge-sold-out class.
+
+        Example show block:
+        <div class="tour-item">
+          <div>
+            <div class="tour-date">Jul 12</div>
+            <div class="tour-date-sub">2025 &nbsp;·&nbsp; Saturday</div>
+          </div>
+          <div>
+            <div class="tour-venue">Venue Name</div>
+            <div class="tour-city">City, State</div>
+          </div>
+          <div class="tour-status">
+            <span class="tour-badge badge-on-sale">On Sale</span>
+          </div>
+          <a href="https://tickets.com/..." class="tour-ticket" target="_blank">Tickets</a>
+        </div>
+
+        When you have no shows, you can remove the empty message and add real dates.
+      -->
+      <div class="tour-empty">
+        // No upcoming shows scheduled — check back soon or <a href="#contact" style="color:var(--accent)">reach out for booking</a>.
+      </div>
+    </div>
+
+    <div class="tour-note">
+      For bookings and show inquiries, contact <a href="mailto:Bookings@TimKoranda.com" style="color:var(--accent)">Bookings@TimKoranda.com</a>
+    </div>
+  </section>
+
+  <!-- ── Discography ── -->
+  <section id="discography">
+    <div class="sec-head">
+      <span class="sec-num">03</span>
+      <h2 class="sec-title">Discography</h2>
+      <div class="sec-rule"></div>
+    </div>
+
+    <div class="disco-grid">
+
+      <!-- Release 1: deadmau5 Remix -->
+      <div class="disco-card">
+        <div class="disco-art">
+          <img src="https://i1.sndcdn.com/avatars-GUkJ5cEclTTswfyy-AGKYtA-t500x500.jpg" alt="Science — Tim Koranda Remix" />
+          <div class="disco-art-overlay">
+            <a href="https://soundcloud.com/timkoranda" class="disco-stream-btn" target="_blank" rel="noopener">SoundCloud</a>
+          </div>
+        </div>
+        <div class="disco-body">
+          <span class="disco-type remix">Remix</span>
+          <div class="disco-title">Science</div>
+          <div class="disco-artist">deadmau5 + Stevie Appleton<br>Tim Koranda Remix</div>
+          <div class="disco-year">2025</div>
+        </div>
+      </div>
+
+      <!-- Release 2: Live Brussels -->
+      <div class="disco-card">
+        <div class="disco-art">
+          <img src="https://i1.sndcdn.com/artworks-000208224370-z4qybt-t500x500.jpg" alt="Live @ Brussels" />
+          <div class="disco-art-overlay">
+            <a href="https://soundcloud.com/timkoranda/soigottalilexcited_tim-koranda_livebrussels_2417" class="disco-stream-btn" target="_blank" rel="noopener">SoundCloud</a>
+          </div>
+        </div>
+        <div class="disco-body">
+          <span class="disco-type live">Live</span>
+          <div class="disco-title">So I Gotta Lil Excited</div>
+          <div class="disco-artist">Tim Koranda<br>Live @ Brussels</div>
+          <div class="disco-year">2017</div>
+        </div>
+      </div>
+
+      <!-- Release 3: Casa de la Playa -->
+      <div class="disco-card">
+        <div class="disco-art">
+          <img src="https://i1.sndcdn.com/artworks-000196744162-zszgo5-t500x500.jpg" alt="Casa de la Playa" />
+          <div class="disco-art-overlay">
+            <a href="https://soundcloud.com/timkoranda/casa-de-la-playa-feat-tim-koranda-felt" class="disco-stream-btn" target="_blank" rel="noopener">SoundCloud</a>
+          </div>
+        </div>
+        <div class="disco-body">
+          <span class="disco-type live">Live</span>
+          <div class="disco-title">Casa de la Playa</div>
+          <div class="disco-artist">feat. Tim Koranda<br>Felt 11/5/16</div>
+          <div class="disco-year">2016</div>
+        </div>
+      </div>
+
+      <!-- Placeholder — add more releases here -->
+      <div class="disco-card" style="opacity:0.45">
+        <div class="disco-art">
+          <div class="disco-art-ph" style="font-size:2rem;color:var(--line)">+</div>
+        </div>
+        <div class="disco-body">
+          <span class="disco-type">Release</span>
+          <div class="disco-title" style="color:var(--muted)">Add Release</div>
+          <div class="disco-artist">Copy a card block above<br>and fill in your details</div>
+          <div class="disco-year">—</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Tracks ── -->
+  <section id="tracks">
+    <div class="sec-head">
+      <span class="sec-num">04</span>
+      <h2 class="sec-title">Tracks</h2>
+      <div class="sec-rule"></div>
+    </div>
+
+    <div class="player-wrap">
+      <div class="player-bar">
+        <span>▸ Stream on SoundCloud</span>
+        <a href="https://soundcloud.com/timkoranda" target="_blank" rel="noopener">soundcloud.com/timkoranda ↗</a>
+      </div>
+      <iframe
+        width="100%"
+        height="450"
+        scrolling="no"
+        frameborder="no"
+        allow="autoplay"
+        src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Ftimkoranda&color=%2300d4ff&auto_play=false&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=true&visual=true"
+        title="Tim Koranda on SoundCloud"
+      ></iframe>
+    </div>
+  </section>
+
+  <!-- ── Gallery ── -->
+  <section id="gallery">
+    <div class="sec-head">
+      <span class="sec-num">05</span>
+      <h2 class="sec-title">Gallery</h2>
+      <div class="sec-rule"></div>
+    </div>
+
+    <div class="gallery-montage">
+      <!-- 1: 3×2 wide feature — A&H neon controller, subject fills center -->
+      <div class="gm-cell"><img src="images/gallery/m06.jpg" style="object-position:center center" alt="" loading="lazy" /></div>
+      <!-- 2: STEREO fire poster — flame + title in upper 40% -->
+      <div class="gm-cell"><img src="images/gallery/m01.jpg" style="object-position:center 68%" alt="" loading="lazy" /></div>
+      <!-- 3: STEREO radio poster — radio art in upper third -->
+      <div class="gm-cell"><img src="images/gallery/m03.jpg" style="object-position:center 32%" alt="" loading="lazy" /></div>
+      <!-- 5: 2×1 wide — Tim at decks (Macy), face is right-of-center -->
+      <div class="gm-cell"><img src="images/gallery/m05.jpg" style="object-position:68% center" alt="" loading="lazy" /></div>
+      <!-- 6: Open Air flyer — headline in center-upper -->
+      <div class="gm-cell"><img src="images/gallery/m04.jpg" style="object-position:center 58%" alt="" loading="lazy" /></div>
+      <!-- 7: 1×2 tall — Urban Development, city skyline upper half -->
+      <div class="gm-cell"><img src="images/gallery/m09.jpg" style="object-position:center 35%" alt="" loading="lazy" /></div>
+      <!-- 8: Homegrown flyer — red silhouette face at top -->
+      <div class="gm-cell"><img src="images/gallery/m08.jpg" style="object-position:center 54%" alt="" loading="lazy" /></div>
+      <!-- 9: Kaskade square flyer — skyline + title fills frame -->
+      <div class="gm-cell"><img src="images/gallery/m25.jpg" style="object-position:center center" alt="" loading="lazy" /></div>
+      <!-- 10: 2×1 wide — dancing crowd, action in lower two-thirds -->
+      <div class="gm-cell"><img src="images/gallery/m10.jpg" style="object-position:center 58%" alt="" loading="lazy" /></div>
+      <!-- 11: Balcony @ Yost — faces in upper quarter -->
+      <div class="gm-cell"><img src="images/gallery/m11.jpg" style="object-position:center 18%" alt="" loading="lazy" /></div>
+      <!-- 12: Clockwork flyer — turntable art in center -->
+      <div class="gm-cell"><img src="images/gallery/m12.jpg" style="object-position:center 38%" alt="" loading="lazy" /></div>
+      <!-- 13: 1×2 tall — Sunkissed sailor, pin-up figure upper half -->
+      <div class="gm-cell"><img src="images/gallery/m16.jpg" style="object-position:center 28%" alt="" loading="lazy" /></div>
+      <!-- 14: Nov 9 flowers flyer — main graphic in upper-center -->
+      <div class="gm-cell"><img src="images/gallery/m13.jpg" style="object-position:center 35%" alt="" loading="lazy" /></div>
+      <!-- 15: DJ Dan flyer — face photo at very top -->
+      <div class="gm-cell"><img src="images/gallery/m14.jpg" style="object-position:center 68%" alt="" loading="lazy" /></div>
+      <!-- 16: 3×2 wide feature — Tim at pink LED stage, centered -->
+      <div class="gm-cell"><img src="images/gallery/m17.jpg" style="object-position:center center" alt="" loading="lazy" /></div>
+      <!-- 17: Sunkissed B.A.2.L.A. — script title in center -->
+      <div class="gm-cell"><img src="images/gallery/m18.jpg" style="object-position:center 63%" alt="" loading="lazy" /></div>
+      <!-- 18: Silky space flyer — face in upper third -->
+      <div class="gm-cell"><img src="images/gallery/m19.jpg" style="object-position:center 18%" alt="" loading="lazy" /></div>
+      <!-- 19: 2×1 wide — TTT ultra-wide banner, centered content -->
+      <div class="gm-cell"><img src="images/gallery/m02.jpg" style="object-position:58% center" alt="" loading="lazy" /></div>
+      <!-- 20: Housework flyer — Tim face + sunglasses upper portion -->
+      <div class="gm-cell"><img src="images/gallery/m20.jpg" style="object-position:center 58%" alt="" loading="lazy" /></div>
+      <!-- 21: Sunkissed Laguna Beach — cocktail scene center -->
+      <div class="gm-cell"><img src="images/gallery/m21.jpg" style="object-position:center 45%" alt="" loading="lazy" /></div>
+      <!-- 22: 1×2 tall — Sunkissed Silky Zengo, face at very top -->
+      <div class="gm-cell"><img src="images/gallery/m22.jpg" style="object-position:center 10%" alt="" loading="lazy" /></div>
+      <!-- 23: Conspiracy @ King King — title + planet design upper half -->
+      <div class="gm-cell"><img src="images/gallery/m23.jpg" style="object-position:center 68%" alt="" loading="lazy" /></div>
+      <!-- 24: 2×1 wide — A&H + Pioneer mixer, fills frame -->
+      <div class="gm-cell"><img src="images/gallery/m24.jpg" style="object-position:center center" alt="" loading="lazy" /></div>
+      <!-- 25: TTT flowers square — text in center, flowers frame -->
+      <div class="gm-cell"><img src="images/gallery/m29.jpg" style="object-position:center center" alt="" loading="lazy" /></div>
+      <!-- 26: NYE 2017 — abstract paint upper, NYE2017 lower-center -->
+      <div class="gm-cell"><img src="images/gallery/m26.jpg" style="object-position:center 42%" alt="" loading="lazy" /></div>
+      <!-- 27: 3×2 wide feature — two-shot candid, subjects centered -->
+      <div class="gm-cell"><img src="images/gallery/m15.jpg" style="object-position:center center" alt="" loading="lazy" /></div>
+      <!-- 28: STEREO Saturdays beach — STEREO title + beach center -->
+      <div class="gm-cell"><img src="images/gallery/m28.jpg" style="object-position:center 40%" alt="" loading="lazy" /></div>
+      <!-- 29: Venice Underground — VU meter + title in center -->
+      <div class="gm-cell"><img src="images/gallery/m32.png" style="object-position:center 38%" alt="" loading="lazy" /></div>
+      <!-- 30: 1×2 tall — I Love Dirty House Music, Tim face upper third -->
+      <div class="gm-cell"><img src="images/gallery/m30.png" style="object-position:center 18%" alt="" loading="lazy" /></div>
+      <!-- 31: 2×1 wide — TTT Tim-at-decks banner, Tim right-of-center -->
+      <div class="gm-cell"><img src="images/gallery/m27.jpg" style="object-position:65% center" alt="" loading="lazy" /></div>
+      <!-- 32: Sunkissed Jun 22 DJ+crowd, action in upper center -->
+      <div class="gm-cell"><img src="images/gallery/m31.png" style="object-position:center 59%" alt="" loading="lazy" /></div>
+      <div class="gm-cell"><img src="images/gallery/m33.jpg" style="object-position:60% 22%" alt="" loading="lazy" /></div>
+
+    </div>
+
+  </section>
+
+  <!-- ── Merch ── -->
+  <section id="merch">
+    <div class="sec-head">
+      <span class="sec-num">06</span>
+      <h2 class="sec-title">Merch</h2>
+      <div class="sec-rule"></div>
+    </div>
+
+    <div class="merch-soon">
+      <span class="merch-soon-label">// Drop Status //</span>
+      <div>
+        <div class="merch-soon-text">Building this drop — circle back soon</div>
+        <div class="merch-soon-sub">Items below are previews · links go live at launch</div>
+      </div>
+    </div>
+
+    <div class="shop-grid">
+      <div class="shop-card">
+        <div class="shop-thumb"><div class="shop-thumb-ph">♪</div></div>
+        <div class="shop-body">
+          <div class="shop-name">Album Title</div>
+          <div class="shop-sub">Digital · 10 tracks</div>
+          <div class="shop-row">
+            <span class="shop-price">$9.99</span>
+            <a href="#" class="shop-btn">Buy</a>
+          </div>
+        </div>
+      </div>
+      <div class="shop-card">
+        <div class="shop-thumb"><div class="shop-thumb-ph">♪</div></div>
+        <div class="shop-body">
+          <div class="shop-name">EP Title</div>
+          <div class="shop-sub">Digital · 5 tracks</div>
+          <div class="shop-row">
+            <span class="shop-price">$5.99</span>
+            <a href="#" class="shop-btn">Buy</a>
+          </div>
+        </div>
+      </div>
+      <div class="shop-card">
+        <div class="shop-thumb"><div class="shop-thumb-ph">◈</div></div>
+        <div class="shop-body">
+          <div class="shop-name">Tee — Black</div>
+          <div class="shop-sub">100% Cotton · S–2XL</div>
+          <div class="shop-row">
+            <span class="shop-price">$28.00</span>
+            <a href="#" class="shop-btn">Buy</a>
+          </div>
+        </div>
+      </div>
+      <div class="shop-card">
+        <div class="shop-thumb"><div class="shop-thumb-ph">◈</div></div>
+        <div class="shop-body">
+          <div class="shop-name">Vinyl — Ltd.</div>
+          <div class="shop-sub">180g · Numbered</div>
+          <div class="shop-row">
+            <span class="shop-price">$34.00</span>
+            <a href="#" class="shop-btn">Buy</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="shop-note">
+      Link "Buy" buttons to <a href="https://bandcamp.com" target="_blank">Bandcamp</a>,
+      <a href="https://shopify.com" target="_blank">Shopify</a>, or
+      <a href="https://gumroad.com" target="_blank">Gumroad</a> to accept real payments.
+      GoDaddy also has a built-in ecommerce add-on if you'd prefer to keep everything in one place.
+    </div>
+  </section>
+
+  <!-- ── Contact ── -->
+  <section id="contact">
+    <div class="sec-head">
+      <span class="sec-num">07</span>
+      <h2 class="sec-title">Contact</h2>
+      <div class="sec-rule"></div>
+    </div>
+
+    <div class="contact-grid">
+      <div>
+        <div class="c-block">
+          <div class="c-label">Booking &amp; General</div>
+          <a href="mailto:Bookings@TimKoranda.com" class="c-val">Bookings@TimKoranda.com</a>
+        </div>
+        <div class="c-block">
+          <div class="c-label">Label</div>
+          <a href="https://flowstaterecords.fm" target="_blank" rel="noopener" class="c-val">flowstaterecords.fm</a>
+        </div>
+        <div class="c-block">
+          <div class="c-label">Based In</div>
+          <div class="c-val">Los Angeles, CA</div>
+        </div>
+        <div class="c-block">
+          <div class="c-label">Follow</div>
+          <div style="display:flex;flex-direction:column;gap:0.4rem;margin-top:0.2rem">
+            <a href="https://soundcloud.com/timkoranda" class="c-val" target="_blank" rel="noopener" style="font-size:0.9rem">SoundCloud</a>
+            <a href="https://www.instagram.com/timkoranda/" class="c-val" target="_blank" rel="noopener" style="font-size:0.9rem">Instagram</a>
+            <a href="https://www.facebook.com/tim.koranda" class="c-val" target="_blank" rel="noopener" style="font-size:0.9rem">Facebook</a>
+            <a href="https://x.com/timkoranda" class="c-val" target="_blank" rel="noopener" style="font-size:0.9rem">X / Twitter</a>
+            <a href="https://open.spotify.com" class="c-val" target="_blank" rel="noopener" style="font-size:0.9rem;opacity:0.4">Spotify <span style="font-size:0.7rem">(coming soon)</span></a>
+            <a href="https://music.apple.com" class="c-val" target="_blank" rel="noopener" style="font-size:0.9rem;opacity:0.4">Apple Music <span style="font-size:0.7rem">(coming soon)</span></a>
+            <a href="https://www.mixcloud.com" class="c-val" target="_blank" rel="noopener" style="font-size:0.9rem;opacity:0.4">Mixcloud <span style="font-size:0.7rem">(coming soon)</span></a>
+          </div>
+        </div>
+      </div>
+
+      <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST" onsubmit="handleSubmit(event)">
+        <!--
+          FREE CONTACT FORM: Sign up at https://formspree.io, create a form,
+          and replace YOUR_FORM_ID above with your actual form ID.
+        -->
+        <div class="form-pair">
+          <div class="fg">
+            <label class="flabel" for="name">Name</label>
+            <input class="fctrl" type="text" id="name" name="name" placeholder="Your name" required />
+          </div>
+          <div class="fg">
+            <label class="flabel" for="email">Email</label>
+            <input class="fctrl" type="email" id="email" name="email" placeholder="your@email.com" required />
+          </div>
+        </div>
+        <div class="fg" style="margin-top:1px">
+          <label class="flabel" for="subject">Subject</label>
+          <input class="fctrl" type="text" id="subject" name="subject" placeholder="Booking, collab, or just hello" />
+        </div>
+        <div class="fg" style="margin-top:1px">
+          <label class="flabel" for="message">Message</label>
+          <textarea class="fctrl" id="message" name="message" placeholder="What's on your mind?" required></textarea>
+        </div>
+        <button type="submit" class="fsub">Send Message</button>
+        <p id="fstatus"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer>
+    <span class="footer-logo">Tim Koranda</span>
+    <span class="footer-label"><a href="https://flowstaterecords.fm" target="_blank" rel="noopener">Flowstate Records</a></span>
+    <ul class="footer-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#tour">Tour</a></li>
+      <li><a href="#discography">Music</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#merch">Merch</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <span class="footer-copy">&copy; <span id="yr"></span> Tim Koranda · All rights reserved</span>
+  </footer>
+
+  <!-- ── Lightbox ── -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <div class="lb-close">[ Close ]</div>
+    <img id="lb-img" src="" alt="" />
+  </div>
+
+  <script>
+    document.getElementById('yr').textContent = new Date().getFullYear();
+
+    // ── Gallery fish-eye (Apple Watch home screen) ──
+    (function () {
+      const montage    = document.querySelector('.gallery-montage');
+      if (!montage) return;
+      const cells = [...montage.querySelectorAll('.gm-cell')];
+
+      const MAX_SCALE = 1.55;
+      const MIN_SCALE = 0.90;  // cells stay larger when away from cursor — easier to target
+      const RADIUS    = 280;   // fish-eye influence radius (px)
+      const COL_R     = 200;   // fade distance from cell EDGE (inside cell = always full colour)
+      const HIT_PAD   = 24;    // px buffer around each cell that counts as "inside"
+
+      // S-curve easing: smooth entry & exit, no harsh edges
+      function smoothstep(t) {
+        const c = Math.max(0, Math.min(1, t));
+        return c * c * (3 - 2 * c);
+      }
+
+      // Stronger ease for the bloom centre
+      function smootherstep(t) {
+        const c = Math.max(0, Math.min(1, t));
+        return c * c * c * (c * (c * 6 - 15) + 10);
+      }
+
+      function centre(el) {
+        const r = el.getBoundingClientRect();
+        return [r.left + r.width * 0.5, r.top + r.height * 0.5];
+      }
+
+      // Distance from cursor to nearest point on cell edge (0 if inside or within HIT_PAD)
+      function edgeDist(mx, my, el) {
+        const r = el.getBoundingClientRect();
+        const dx = Math.max(r.left - HIT_PAD - mx, 0, mx - r.right  - HIT_PAD);
+        const dy = Math.max(r.top  - HIT_PAD - my, 0, my - r.bottom - HIT_PAD);
+        return Math.hypot(dx, dy);
+      }
+
+      function move(e) {
+        const mx = e.clientX, my = e.clientY;
+        cells.forEach(cell => {
+          const [cx, cy] = centre(cell);
+          const dCentre = Math.hypot(mx - cx, my - cy);
+
+          // Fish-eye scale — cosine falloff from cell centre
+          const tScale = dCentre < RADIUS ? 0.5 + 0.5 * Math.cos(Math.PI * dCentre / RADIUS) : 0;
+          const sc = MIN_SCALE + (MAX_SCALE - MIN_SCALE) * tScale;
+          cell.style.transform = `scale(${sc.toFixed(3)})`;
+
+          // Colour reveal — distance from cell EDGE so whole cell = full colour
+          const dEdge  = edgeDist(mx, my, cell);
+          const colorT = smootherstep(Math.max(0, 1 - dEdge / COL_R));
+          const img    = cell.querySelector('img');
+
+          const gs  = Math.round((1 - colorT) * 100);
+          const sep = Math.round((1 - colorT) * 70);
+          const sat = ((1 - colorT) * 1.8).toFixed(2);
+          const bri = (0.72 + colorT * 0.22).toFixed(2);
+          const con = (1.1  - colorT * 0.1).toFixed(2);
+
+          if (colorT < 0.01) {
+            const dbri = (0.72 + tScale * 0.16).toFixed(2);
+            img.style.filter = `grayscale(100%) sepia(70%) hue-rotate(155deg) saturate(1.8) brightness(${dbri}) contrast(1.1)`;
+          } else if (colorT > 0.99) {
+            img.style.filter = `brightness(${bri}) contrast(${con})`;
+          } else {
+            img.style.filter = `grayscale(${gs}%) sepia(${sep}%) hue-rotate(155deg) saturate(${sat}) brightness(${bri}) contrast(${con})`;
+          }
+
+          // Very soft cyan halo
+          const glowStr  = (colorT * 0.18).toFixed(2);
+          const glowPx   = Math.round(colorT * 22);
+          const spreadPx = Math.round(colorT * 3);
+          cell.style.boxShadow = colorT > 0.06
+            ? `0 0 ${glowPx}px ${spreadPx}px rgba(0,212,255,${glowStr})`
+            : '';
+          cell.style.zIndex = Math.round(Math.max(tScale, colorT) * 40);
+        });
+      }
+
+      function leave() {
+        cells.forEach(cell => {
+          cell.style.transform  = '';
+          cell.style.zIndex     = '';
+          cell.style.boxShadow  = '';
+          const img = cell.querySelector('img');
+          img.style.filter = '';
+        });
+      }
+
+      montage.addEventListener('mousemove',  move,  { passive: true });
+      montage.addEventListener('mouseleave', leave);
+    })();
+
+    // ── Film-grain noise ──
+    (function () {
+      const canvas = document.getElementById('noiseCanvas');
+      const ctx    = canvas.getContext('2d');
+      // Small offscreen canvas — scaled up for performance
+      const osc  = document.createElement('canvas');
+      osc.width  = 192;
+      osc.height = 192;
+      const octx = osc.getContext('2d');
+      let raf, lastTs = 0;
+
+      function resize() {
+        canvas.width  = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+      }
+
+      function tick(ts) {
+        if (ts - lastTs > 80) {   // ~12 fps — enough flicker without burning CPU
+          lastTs = ts;
+          const id = octx.createImageData(192, 192);
+          const d  = id.data;
+          for (let i = 0; i < d.length; i += 4) {
+            const v = Math.random() * 255 | 0;
+            d[i] = d[i + 1] = d[i + 2] = v;
+            d[i + 3] = 255;
+          }
+          octx.putImageData(id, 0, 0);
+          ctx.imageSmoothingEnabled = false;
+          ctx.drawImage(osc, 0, 0, canvas.width, canvas.height);
+        }
+        raf = requestAnimationFrame(tick);
+      }
+
+      const hero = document.getElementById('home');
+      new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) { if (!raf) raf = requestAnimationFrame(tick); }
+        else { cancelAnimationFrame(raf); raf = null; }
+      }, { threshold: 0.01 }).observe(hero);
+
+      window.addEventListener('resize', resize, { passive: true });
+      requestAnimationFrame(() => { resize(); requestAnimationFrame(tick); });
+    })();
+
+    // ── Stereometer (Goniometer) — upper-right, right-justified ──
+    (function () {
+      const canvas = document.getElementById('oscCanvas');
+      const ctx    = canvas.getContext('2d');
+      const SQRT2  = Math.SQRT2;
+
+      const TRAIL = 1100;
+      const SPF   = 7;
+      const buf   = new Float32Array(TRAIL * 2);
+      let   head = 0, filled = 0, t = 0, raf = null;
+
+      function resize() {
+        canvas.width  = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+      }
+
+      function simStereo(n) {
+        const lfo   = n * 0.0011;
+        // Gentle envelope shaping — pow < 1 flattens sustain, sharpens attack/release
+        const env   = 0.65 + 0.35 * Math.pow(Math.abs(Math.sin(n * 0.0061 + 0.8)), 0.35);
+        const mono  = (Math.sin(n * 0.0473) * 0.44
+                    + Math.sin(n * 0.1137) * 0.16
+                    + Math.sin(n * 0.0311) * 0.18
+                    + Math.sin(n * 0.0789) * 0.10
+                    + Math.sin(n * 0.0193) * 0.08) * env;
+        const width = 0.38 + 0.20 * Math.sin(lfo);
+        const sideL =  Math.sin(n * 0.0197 + 1.1)  * width
+                     + Math.sin(n * 0.0083 + 2.3)   * width * 0.45
+                     + Math.sin(n * 0.0341 + 0.7)   * width * 0.25
+                     + Math.sin(n * 0.0057 + 3.1)   * width * 0.15;
+        const L = mono + sideL;
+        const R = mono - sideL;
+        return { x: (L - R) / SQRT2, y: (L + R) / SQRT2 };
+      }
+
+      function draw() {
+        const W = canvas.width, H = canvas.height;
+        ctx.clearRect(0, 0, W, H);
+
+        const scale = Math.min(W, H) * 0.19;
+        const cx = W - scale * 1.5;
+        const cy = H * 0.38;
+
+        for (let i = 0; i < SPF; i++) {
+          const { x, y } = simStereo(t++);
+          const slot = (head % TRAIL) * 2;
+          buf[slot]     = cx + x * scale;
+          buf[slot + 1] = cy - y * scale;
+          head++;
+          if (filled < TRAIL) filled++;
+        }
+
+        // Reference axes
+        ctx.save();
+        ctx.strokeStyle = '#00d4ff';
+        ctx.lineWidth   = 1;
+        ctx.setLineDash([3, 10]);
+        const r = scale * 1.55;
+        ctx.globalAlpha = 0.055;
+        ctx.beginPath(); ctx.moveTo(cx, cy - r); ctx.lineTo(cx, cy + r); ctx.stroke();
+        ctx.globalAlpha = 0.035;
+        ctx.beginPath(); ctx.moveTo(cx - r, cy); ctx.lineTo(cx + r, cy); ctx.stroke();
+        const d = r * 0.707;
+        ctx.globalAlpha = 0.022;
+        ctx.beginPath(); ctx.moveTo(cx - d, cy - d); ctx.lineTo(cx + d, cy + d); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx + d, cy - d); ctx.lineTo(cx - d, cy + d); ctx.stroke();
+        ctx.restore();
+
+        // Persistence dots
+        for (let i = 0; i < filled; i++) {
+          const norm  = 1 - (filled - 1 - i) / filled;
+          const alpha = Math.pow(norm, 2.2) * 0.52;
+          if (alpha < 0.005) continue;
+          const slot = ((head - filled + i + TRAIL * 8) % TRAIL) * 2;
+          const px = buf[slot], py = buf[slot + 1];
+          if (norm > 0.85) {
+            ctx.beginPath();
+            ctx.arc(px, py, 3.5, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(0,212,255,${(alpha * 0.18).toFixed(3)})`;
+            ctx.fill();
+          }
+          ctx.beginPath();
+          ctx.arc(px, py, norm > 0.6 ? 0.7 : 0.4, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(0,212,255,${alpha.toFixed(3)})`;
+          ctx.fill();
+        }
+
+        raf = requestAnimationFrame(draw);
+      }
+
+      const hero = document.getElementById('home');
+      new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) { if (!raf) raf = requestAnimationFrame(draw); }
+        else { cancelAnimationFrame(raf); raf = null; }
+      }, { threshold: 0.01 }).observe(hero);
+
+      window.addEventListener('resize', resize, { passive: true });
+      resize();
+      draw();
+    })();
+
+    // Mobile nav
+    const tog = document.getElementById('navToggle');
+    const nl  = document.getElementById('navLinks');
+    tog.addEventListener('click', () => nl.classList.toggle('open'));
+    nl.querySelectorAll('a').forEach(a => a.addEventListener('click', () => nl.classList.remove('open')));
+
+    // Active link on scroll
+    const secs = document.querySelectorAll('section[id]');
+    window.addEventListener('scroll', () => {
+      let cur = '';
+      secs.forEach(s => { if (window.scrollY >= s.offsetTop - 90) cur = s.id; });
+      document.querySelectorAll('.nav-links a').forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + cur);
+      });
+    }, { passive: true });
+
+    // Lightbox
+    function openLightbox(el) {
+      const img = el.querySelector('img'); if (!img) return;
+      document.getElementById('lb-img').src = img.src;
+      document.getElementById('lb-img').alt = img.alt;
+      document.getElementById('lightbox').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+    // Contact form (Formspree)
+    async function handleSubmit(e) {
+      e.preventDefault();
+      const form = e.target, st = document.getElementById('fstatus');
+      st.style.display = 'block'; st.textContent = '// Sending…';
+      try {
+        const r = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } });
+        if (r.ok) { st.textContent = '// Message sent.'; form.reset(); }
+        else { st.style.color = '#ff4040'; st.textContent = '// Error — email directly.'; }
+      } catch { st.style.color = '#ff4040'; st.textContent = '// Network error. Try again.'; }
+    }
+  </script>
+</body>
+</html>
