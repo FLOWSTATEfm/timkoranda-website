@@ -960,8 +960,21 @@
       text-shadow: 0 0 10px rgba(0,212,255,0.35);
     }
 
-    /* ─── Tour ─── */
-    #tour { background: var(--bg); }
+    /* ─── Transmissions ─── */
+    #tour {
+      position: relative;
+      overflow: hidden;
+    }
+    #tour::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.62) 45%, rgba(0,0,0,0.88) 100%),
+        url('images/gallery/m06.jpg') center 35% / cover no-repeat;
+      z-index: 0;
+    }
+    #tour > * { position: relative; z-index: 1; }
 
     .tour-list { max-width: 1100px; }
 
@@ -1020,8 +1033,14 @@
       text-transform: uppercase;
       padding: 0.2rem 0.6rem;
     }
-    .badge-on-sale { color: var(--acid); border: 1px solid rgba(212,255,0,0.35); }
-    .badge-sold-out { color: var(--muted); border: 1px solid var(--line2); }
+    .badge-on-sale  { color: var(--acid);   border: 1px solid rgba(212,255,0,0.35); }
+    .badge-sold-out { color: var(--muted);  border: 1px solid var(--line2); }
+    .badge-judging  { color: var(--accent); border: 1px solid rgba(0,212,255,0.35); animation: judging-pulse 2.4s ease-in-out infinite; }
+    .badge-release  { color: var(--acid);   border: 1px solid rgba(212,255,0,0.25); }
+    @keyframes judging-pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.45; }
+    }
 
     .tour-ticket {
       font-family: 'Space Mono', monospace;
@@ -1063,25 +1082,56 @@
     .tour-ticket-na { color: var(--muted); border-color: var(--line); pointer-events: none; }
 
     .tour-empty {
+      padding: 6rem 0 5rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      text-align: center;
+    }
+    .tour-empty-headline {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.12);
+      line-height: 1;
+      margin-bottom: 1.5rem;
+    }
+    .tour-empty-sub {
       font-family: 'Space Mono', monospace;
-      font-size: 0.65rem;
-      letter-spacing: 0.15em;
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
       color: var(--muted);
-      padding: 3rem 0;
-      border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
+      margin-bottom: 2.5rem;
+    }
+    .tour-book-btn {
+      display: inline-block;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid rgba(0,212,255,0.4);
+      padding: 0.8rem 2rem;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+    }
+    .tour-book-btn:hover {
+      background: var(--accent);
+      color: #000;
+      box-shadow: 0 0 18px rgba(0,212,255,0.5);
     }
 
     .tour-note {
       margin-top: 2rem;
       font-family: 'Space Mono', monospace;
-      font-size: 0.6rem;
+      font-size: 0.58rem;
       letter-spacing: 0.1em;
-      color: var(--muted);
+      color: rgba(255,255,255,0.25);
       line-height: 1.8;
-      border-left: 2px solid var(--accent);
-      padding-left: 1rem;
-      max-width: 600px;
+      text-align: center;
     }
 
     /* ─── Discography ─── */
@@ -1141,6 +1191,7 @@
       gap: 0.5rem;
     }
     .disco-card:hover .disco-art-overlay { opacity: 1; }
+    @media (hover: none) { .disco-art-overlay { opacity: 1; } }
 
     .disco-stream-btn {
       font-family: 'Space Mono', monospace;
@@ -1285,6 +1336,7 @@
     .gm-cell:nth-child(30) { grid-column: span 2; }
     /* Tall portrait cells — 1×2 */
     .gm-cell:nth-child(6)  { grid-row: span 2; }
+    .gm-cell:nth-child(8)  { grid-row: span 2; }
     .gm-cell:nth-child(12) { grid-row: span 2; }
     .gm-cell:nth-child(21) { grid-row: span 2; }
     .gm-cell:nth-child(29) { grid-row: span 2; }
@@ -1791,7 +1843,7 @@
     </div>
     <ul class="nav-links" id="navLinks">
       <li><a href="#about">About</a></li>
-      <li><a href="#tour">Tour</a></li>
+      <li><a href="#tour">Transmissions</a></li>
       <li><a href="#discography">Music</a></li>
       <li><a href="#gallery">Gallery</a></li>
       <li><a href="#merch">Merch</a></li>
@@ -1858,7 +1910,7 @@
         <div class="hero-sep"></div>
         <div class="hero-cta">
           <a href="#tracks" class="btn btn-primary">Listen Now</a>
-          <a href="#tour" class="btn btn-outline">Tour Dates</a>
+          <a href="#tour" class="btn btn-outline">Transmissions</a>
         </div>
       </div>
     </div>
@@ -1987,11 +2039,11 @@
     <canvas id="synthNoise" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3;opacity:0.045;mix-blend-mode:overlay;"></canvas>
   </div>
 
-  <!-- ── Tour ── -->
+  <!-- ── Transmissions ── -->
   <section id="tour" style="border-top: none;">
     <div class="sec-head">
       <span class="sec-num">02</span>
-      <h2 class="sec-title">Tour</h2>
+      <h2 class="sec-title">Transmissions</h2>
       <div class="sec-rule"></div>
     </div>
 
@@ -2019,13 +2071,40 @@
 
         When you have no shows, you can remove the empty message and add real dates.
       -->
-      <div class="tour-empty">
-        No upcoming shows scheduled — check back soon or <a href="#contact" style="color:var(--accent)">reach out for booking</a>.
+      <div class="tour-item">
+        <div>
+          <div class="tour-date">Jul 6</div>
+          <div class="tour-date-sub">2026 &nbsp;·&nbsp; Monday</div>
+        </div>
+        <div>
+          <div class="tour-venue">deadmau5 "Science" — Remix Entry</div>
+          <div class="tour-city">SKIO Music &nbsp;·&nbsp; mau5trap Remix Contest</div>
+        </div>
+        <div class="tour-status">
+          <span class="tour-badge badge-judging">Judging</span>
+        </div>
+        <a href="https://skiomusic.com/contest/science-remix-contest" class="tour-ticket" target="_blank" rel="noopener">Contest</a>
       </div>
+
+      <div class="tour-item">
+        <div>
+          <div class="tour-date">Jul 24</div>
+          <div class="tour-date-sub">2026 &nbsp;·&nbsp; Friday</div>
+        </div>
+        <div>
+          <div class="tour-venue">deadmau5 "Science" — Results Announced</div>
+          <div class="tour-city">mau5trap &nbsp;·&nbsp; We Are Your Friends Compilation</div>
+        </div>
+        <div class="tour-status">
+          <span class="tour-badge badge-sold-out">Upcoming</span>
+        </div>
+        <span class="tour-ticket tour-ticket-na">TBA</span>
+      </div>
+
     </div>
 
     <div class="tour-note">
-      For bookings and show inquiries, contact <a href="mailto:Bookings@TimKoranda.com" style="color:var(--accent)">Bookings@TimKoranda.com</a>
+      For bookings and show inquiries — <a href="mailto:Bookings@TimKoranda.com" style="color:var(--accent)">Bookings@TimKoranda.com</a>
     </div>
   </section>
 
@@ -2152,11 +2231,11 @@
       <!-- 8: Homegrown flyer — red silhouette face at top -->
       <div class="gm-cell"><img src="images/gallery/m08.jpg" style="object-position:center 54%" alt="" loading="lazy" /></div>
       <!-- 9: Kaskade square flyer — skyline + title fills frame -->
-      <div class="gm-cell"><img src="images/gallery/m25.jpg" style="object-position:center center" alt="" loading="lazy" /></div>
+      <div class="gm-cell"><img src="images/gallery/m35.jpg" style="object-position:center center" alt="" loading="lazy" /></div>
       <!-- 10: 2×1 wide — dancing crowd, action in lower two-thirds -->
       <div class="gm-cell"><img src="images/gallery/m10.jpg" style="object-position:center 58%" alt="" loading="lazy" /></div>
       <!-- 11: Balcony @ Yost — faces in upper quarter -->
-      <div class="gm-cell"><img src="images/gallery/m11.jpg" style="object-position:center 18%" alt="" loading="lazy" /></div>
+      <div class="gm-cell"><img src="images/gallery/m11.jpg" style="object-position:center 72%" alt="" loading="lazy" /></div>
       <!-- 12: Clockwork flyer — turntable art in center -->
       <div class="gm-cell"><img src="images/gallery/m12.jpg" style="object-position:center 38%" alt="" loading="lazy" /></div>
       <!-- 13: 1×2 tall — Sunkissed sailor, pin-up figure upper half -->
@@ -2200,7 +2279,7 @@
       <!-- 32: Sunkissed Jun 22 DJ+crowd, action in upper center -->
       <div class="gm-cell"><img src="images/gallery/m31.png" style="object-position:center 59%" alt="" loading="lazy" /></div>
       <div class="gm-cell"><img src="images/gallery/m33.jpg" style="object-position:60% 22%" alt="" loading="lazy" /></div>
-      <div class="gm-cell"><img src="images/gallery/m35.jpg" style="object-position:center center" alt="" loading="lazy" /></div>
+      <div class="gm-cell"><img src="images/gallery/m25.jpg" style="object-position:center center" alt="" loading="lazy" /></div>
 
     </div>
 
@@ -2339,7 +2418,7 @@
     <span class="footer-label"><a href="https://flowstaterecords.fm" target="_blank" rel="noopener">Flowstate Records</a></span>
     <ul class="footer-links">
       <li><a href="#about">About</a></li>
-      <li><a href="#tour">Tour</a></li>
+      <li><a href="#tour">Transmissions</a></li>
       <li><a href="#discography">Music</a></li>
       <li><a href="#gallery">Gallery</a></li>
       <li><a href="#merch">Merch</a></li>
