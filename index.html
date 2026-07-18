@@ -1652,6 +1652,63 @@
       letter-spacing: 0.06em;
     }
 
+    /* ─── Powered by Flowstate Platform badge ─── */
+    @keyframes platform-glow-pulse {
+      0%, 100% { box-shadow: 0 0 8px rgba(255,100,30,0.35), 0 0 18px rgba(255,80,10,0.12), inset 0 0 8px rgba(255,90,20,0.04); }
+      50%       { box-shadow: 0 0 14px rgba(255,120,40,0.55), 0 0 30px rgba(255,80,10,0.22), inset 0 0 12px rgba(255,90,20,0.08); }
+    }
+    .platform-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.5rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255,100,30,0.75);
+      border: 1px solid rgba(255,90,20,0.35);
+      border-radius: 2px;
+      padding: 0.38rem 0.85rem;
+      background: rgba(255,70,10,0.04);
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      transition: color 0.25s, border-color 0.25s, background 0.25s;
+    }
+    .platform-badge::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 60%; height: 100%;
+      pointer-events: none;
+      background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(255,120,40,0.18) 28%,
+        rgba(255,200,130,0.55) 50%,
+        rgba(255,120,40,0.18) 72%,
+        transparent 100%);
+      transform: translateX(-160%) skewX(-18deg);
+      transition: none;
+    }
+    .platform-badge:hover {
+      color: rgba(255,140,60,1);
+      border-color: rgba(255,110,30,0.7);
+      background: rgba(255,80,10,0.08);
+      box-shadow: 0 0 14px rgba(255,100,30,0.45), 0 0 28px rgba(255,70,10,0.15), inset 0 0 10px rgba(255,90,20,0.06);
+    }
+    .platform-badge:hover::before {
+      animation: btn-sweep 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    .platform-badge .pb-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: rgba(255,100,30,0.65);
+      box-shadow: 0 0 5px rgba(255,90,20,0.5);
+      flex-shrink: 0;
+      animation: platform-glow-pulse 3s ease-in-out infinite;
+    }
+
     /* ─── Lightbox ─── */
     .lightbox {
       display: none; position: fixed; inset: 0;
@@ -2125,7 +2182,7 @@
         <div class="disco-art">
           <img src="https://geo-media.beatport.com/image_size/1400x1400/5fa29090-2248-43a4-aa9e-588733468550.jpg" alt="Science — Tim Koranda Remix" />
           <div class="disco-art-overlay">
-            <a href="https://soundcloud.com/timkoranda/deadmau5-science-tim-koranda" class="disco-stream-btn" target="_blank" rel="noopener">SoundCloud</a>
+            <span class="disco-stream-btn" style="opacity:0.6;cursor:default">Coming Soon</span>
           </div>
         </div>
         <div class="disco-body">
@@ -2171,7 +2228,10 @@
       <!-- Coming soon card -->
       <div class="disco-card" style="opacity:0.5;pointer-events:none">
         <div class="disco-art">
-          <div class="disco-art-ph" style="font-size:0.65rem;letter-spacing:0.2em;color:var(--accent);text-transform:uppercase">Coming Soon</div>
+          <img src="images/gallery/m34_processed.jpg" alt="New Music — Coming Soon" style="object-position:center 40%" />
+          <div class="disco-art-overlay" style="opacity:1">
+            <span class="disco-stream-btn" style="opacity:0.6;cursor:default">Coming Soon</span>
+          </div>
         </div>
         <div class="disco-body">
           <span class="disco-type" style="opacity:0.5">Release</span>
@@ -2304,8 +2364,11 @@
     </div>
 
     <div class="shop-grid">
+      <!-- Digital Release -->
       <div class="shop-card" style="opacity:0.5;pointer-events:none">
-        <div class="shop-thumb"><div class="shop-thumb-ph">♪</div></div>
+        <div class="shop-thumb">
+          <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=600&q=80" alt="Digital Release" loading="lazy" style="object-position:center 40%" />
+        </div>
         <div class="shop-body">
           <div class="shop-name">Digital Release</div>
           <div class="shop-sub">Coming Soon</div>
@@ -2315,33 +2378,52 @@
           </div>
         </div>
       </div>
+
+      <!-- FLOWSTATE Hoodie — mockup of the print design -->
       <div class="shop-card" style="opacity:0.5;pointer-events:none">
-        <div class="shop-thumb"><div class="shop-thumb-ph">♪</div></div>
+        <div class="shop-thumb" style="flex-direction:column; gap:0; background:#030303; position:relative; overflow:hidden;">
+          <!-- subtle fabric texture via repeating gradient -->
+          <div style="position:absolute;inset:0;background:repeating-linear-gradient(135deg,rgba(255,255,255,0.015) 0px,rgba(255,255,255,0.015) 1px,transparent 1px,transparent 6px);pointer-events:none;"></div>
+          <div style="position:relative;text-align:center;padding:0 1.5rem;">
+            <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:2rem;letter-spacing:0.28em;text-transform:uppercase;color:#ffffff;line-height:1;text-shadow:0 0 40px rgba(0,212,255,0.18)">FLOWSTATE</div>
+            <div style="font-family:'Space Mono',monospace;font-size:0.4rem;letter-spacing:0.45em;text-transform:uppercase;color:#00d4ff;margin-top:0.35rem;text-shadow:0 0 12px rgba(0,212,255,0.6)">RECORDS</div>
+            <div style="width:40px;height:1px;background:linear-gradient(to right,transparent,rgba(0,212,255,0.4),transparent);margin:0.6rem auto 0;"></div>
+            <div style="font-family:'Space Mono',monospace;font-size:0.32rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-top:0.4rem">Underground · Los Angeles</div>
+          </div>
+        </div>
         <div class="shop-body">
-          <div class="shop-name">EP / Mix</div>
-          <div class="shop-sub">Coming Soon</div>
+          <div class="shop-name">FLOWSTATE Hoodie</div>
+          <div class="shop-sub">Black · White &amp; Cyan Print</div>
           <div class="shop-row">
             <span class="shop-price">—</span>
             <span class="shop-btn" style="opacity:0.4;cursor:default">Soon</span>
           </div>
         </div>
       </div>
+
+      <!-- Ferrofluid Visualizer -->
       <div class="shop-card" style="opacity:0.5;pointer-events:none">
-        <div class="shop-thumb"><div class="shop-thumb-ph">◈</div></div>
+        <div class="shop-thumb" style="position:relative;overflow:hidden;">
+          <img src="images/flowstate_ferrofluid.jpg" alt="Ferrofluid Visualizer — FLOWSTATE Edition" loading="lazy" style="object-position:center center;" />
+        </div>
         <div class="shop-body">
-          <div class="shop-name">Apparel</div>
-          <div class="shop-sub">Coming Soon</div>
+          <div class="shop-name">Ferrofluid Visualizer</div>
+          <div class="shop-sub">Bluetooth · FLOWSTATE Edition</div>
           <div class="shop-row">
             <span class="shop-price">—</span>
             <span class="shop-btn" style="opacity:0.4;cursor:default">Soon</span>
           </div>
         </div>
       </div>
+
+      <!-- Vinyl Ltd. -->
       <div class="shop-card" style="opacity:0.5;pointer-events:none">
-        <div class="shop-thumb"><div class="shop-thumb-ph">◈</div></div>
+        <div class="shop-thumb">
+          <img src="https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&w=600&q=80" alt="Vinyl · Ltd." loading="lazy" style="object-position:center 50%" />
+        </div>
         <div class="shop-body">
           <div class="shop-name">Vinyl · Ltd.</div>
-          <div class="shop-sub">Coming Soon</div>
+          <div class="shop-sub">Limited Press · Coming Soon</div>
           <div class="shop-row">
             <span class="shop-price">—</span>
             <span class="shop-btn" style="opacity:0.4;cursor:default">Soon</span>
@@ -2434,6 +2516,9 @@
       <a href="https://www.youtube.com/@timkoranda" class="footer-label" target="_blank" rel="noopener">YouTube</a>
     </div>
     <span class="footer-copy">&copy; <span id="yr"></span> Tim Koranda · All rights reserved</span>
+    <a href="#" class="platform-badge" title="Flowstate Platform — Coming Soon">
+      <span class="pb-dot"></span>powered by FLOWSTATE PLATFORM
+    </a>
   </footer>
 
   <!-- ── Lightbox ── -->
